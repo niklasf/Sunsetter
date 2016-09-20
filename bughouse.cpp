@@ -286,13 +286,7 @@ int main(int argc, char **argv)
 		{
 
 
-#ifdef __EMSCRIPTEN__
-			if (gameBoard.custom || gameBoard.getMoveNum()>9 || !bookMove(&m, gameBoard)) { // What is this doing?  @niklasf
-#endif
-			findMove(&m);
-#ifdef __EMSCRIPTEN__
-		}
-#endif
+		findMove(&m);
 		if(!m.isBad() && gameInProgress && !forceMode && !analyzeMode)
 		gameBoard.playMove(m, 1);
 

@@ -67,7 +67,7 @@ char *clientLogin =
 " (c) Ben Dean-Kawamura, Georg v. Zimmermann\n"
 " See http://sunsetter.sourceforge.net/ for more info.\n\n";
 #else
-const char *clientLogin = "Sunsetter " VERSION " (c) Ben Dean-Kawamura, Georg v. Zimmermann\n";
+char *clientLogin = "Sunsetter " VERSION " (c) Ben Dean-Kawamura, Georg v. Zimmermann\n";
 #endif  // #ifndef __EMSCRIPTEN__
 
 int ratingDiff = 0; 

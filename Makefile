@@ -1,23 +1,27 @@
 # Makefile to build sunsetter for linux.
 
 EXE = sunsetter
-CC = clang
+CXX = clang++
 
-CFLAGS = -O3 -DNDEBUG
+CXXFLAGS = -O3 -DNDEBUG
+LDFLAGS = -O3
 
 OBJECTS = aimoves.o bitboard.o board.o bughouse.o evaluate.o moves.o search.o capture_moves.o check_moves.o interface.o notation.o order_moves.o partner.o quiescense.o tests.o transposition.o validate.o
 
 ifeq ($(ARCH),js)
-CC = em++
+CXX = em++
 EXE = sunsetter.dev.js
-CFLAGS += -s TOTAL_MEMORY=33550000 -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1
-CFLAGS += -s EMTERPRETIFY_ADVISE
-LINKFLAGS += --memory-init-file 0 -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_queue_command']" --pre-js pre.js --post-js post.js
+EMFLAGS += -s TOTAL_MEMORY=33550000 -s EMTERPRETIFY=1 -s EMTERPRETIFY_ASYNC=1
+EMFLAGS += --memory-init-file 0 -s NO_EXIT_RUNTIME=1 -s EXPORTED_FUNCTIONS="['_main', '_queue_command']" --pre-js pre.js --post-js post.js
+#EMFLAGS += -s EMTERPRETIFY_ADVISE=1
+EMFLAGS += -s EMTERPRETIFY_WHITELIST='["__Z10searchMove4moveii", "__Z10searchRootiP4movePi", "__Z12pollForInputv", "__Z12waitForInputv", "__Z15recursiveSearchPiS_S_P4moveiiS0_i", "__Z15searchFirstMove4moveii", "__Z19recursiveFullSearchPiS_S_P4moveiiS0_", "__Z21recursiveCheckEvasionPiS_S_P4moveiiS0_", "__Z6ponderv", "__Z6searchiiiii", "__Z8findMoveP4move", "__Z8testbpgniPPc", "_main"]'
+CXXFLAGS += $(EMFLAGS)
+LDFLAGS += $(EMFLAGS)
 endif
 
 # sunsetter is the default target, so either "make" or "make sunsetter" will do
 $(EXE): $(OBJECTS) .depend
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $(EXE)
+	$(CXX) $(EMFLAGS) $(LDFLAGS) $(OBJECTS) -o $(EXE)
 
 sunsetter.js: sunsetter.dev.js preamble.js
 	cat preamble.js sunsetter.dev.js > sunsetter.js
@@ -28,6 +32,6 @@ clean:
 	rm -f $(OBJECTS) $(EXE) .depend
 
 .depend:
-	$(CC) $(DEPENDFLAGS) -MM $(OBJECTS:.o=.cpp) > $@
+	$(CXX) $(DEPENDFLAGS) -MM $(OBJECTS:.o=.cpp) > $@
 
 -include .depend

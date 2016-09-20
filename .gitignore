@@ -253,3 +253,4 @@ ModelManifest.xml
 .depend
 *.o
 sunsetter
+sunsetter.dev.js
