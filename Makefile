@@ -1,7 +1,6 @@
 # Makefile to build sunsetter for linux.
 
 EXE = sunsetter
-CXX = clang++
 
 CXXFLAGS = -O3 -DNDEBUG
 LDFLAGS = -O3
