@@ -647,7 +647,8 @@ assert ((hashMoveCircle >= 0) && (hashMoveCircle <= 7));
    {
       for(p = PAWN; p <= QUEEN; p = (piece) (p + 1))
 	  {
-         gameBoard.setPieceInHand(c, p, 0);
+         // no need to use setPieceInHand() which updates material and hash key.
+		  hand[c][p] = 0;
 	  }
    }
  
@@ -733,7 +734,7 @@ void boardStruct::setBoard(const char *fen, const char *turn, const char *castle
 	pieces[PAWN] = pieces[ROOK] = pieces[KNIGHT] = pieces[BISHOP] = pieces[QUEEN] = pieces[KING] = qword(0);
 	for (int c = WHITE; c <= BLACK; c++) {
 		for (piece p = PAWN; p <= QUEEN; p++) {
-			setPieceInHand(c, p, 0);
+			hand[c][p] = 0;
 		}
 	}
 	memset(position, NONE, sizeof(position));
@@ -1784,14 +1785,12 @@ int boardStruct::outOfTime(color c)
  * Function: timeToMove
  * Input:    None.
  * Output:   1 if Sunsetter should move
- * Purpose:  Used to see if Sunsetter has taken the maximium amount of time 
+ * Purpose:  Used to see if Sunsetter has taken the maximium amount of time or Nodes
  *           alloted for a move
  */
 
 int boardStruct::timeToMove()
    {
-	
-
 
    double timeused;
    double currentTime;
@@ -1799,7 +1798,7 @@ int boardStruct::timeToMove()
    currentTime = getSysMilliSecs(); 
    timeused = currentTime-lastMoveTime; 
 
-   if ( timeused >= millisecondsPerMove)  return 1;   
+   if (timeused >= millisecondsPerMove) return 1;
 
    return 0;
 
